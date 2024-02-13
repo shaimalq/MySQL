@@ -1,0 +1,303 @@
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| centre_formation   |
+| information_schema |
+| isgi               |
+| mysql              |
+| performance_schema |
+| sys                |
+| test2              |
+| test1              |
++--------------------+
+9 rows in set (0.08 sec)
+
+mysql> use isgi;
+Database changed
+mysql> show tables;
++----------------+
+| Tables_in_isgi |
++----------------+
+| stagiaire      |
++----------------+
+1 row in set (0.13 sec)
+
+mysql> desc stagiaire;
++-----------+-------------+------+-----+-----------+-------------------+
+| Field     | Type        | Null | Key | Default   | Extra             |
++-----------+-------------+------+-----+-----------+-------------------+
+| id       | int | NO   | PRI | NULL      |        |
+| Nom    | varchar(30) | YES  |     | NULL      |                   
+| Age       | int         | YES  |     | NULL      |                   |
+| Filiere   | varchar(20) | YES  |     | NULL      |                   |
+| Ville     | varchar(30) | YES  |     |casablanca |                   |
+| Date_insc | date        | YES  |     | curdate() | DEFAULT_GENERATED |
++-----------+-------------+------+-----+-----------+-------------------+
+6 rows in set (0.01 sec)
+
+mysql> select * from stagiaire;
++-----------+--------+------+---------+-----------+------------+
+|id     | NomSTG | Age  | Filiere | Ville     | Date_insc  |
++-----------+--------+------+---------+-----------+------------+
+| 1	 | HIba   |   19 | Dev     | casablanca | 2023-03-20 |
+| 3	 | Hind   |   28 | info    | casablanca | NULL       |
+| 8	| omar   |   21 | gest    | casablanca | 2024-02-08 |
++-----------+--------+------+---------+-----------+------------+
+3 rows in set (0.01 sec)
+
+mysql> create table etudiant like stagiaire;
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_isgi |
++----------------+
+| etudiant       |
+| stagiaire      |
++----------------+
+2 rows in set (0.00 sec)
+
+mysql> desc etudiant;
++-----------+-------------+------+-----+-----------+-------------------+
+| Field     | Type        | Null | Key | Default   | Extra             |
++-----------+-------------+------+-----+-----------+-------------------+
+|id        | int | NO   | PRI | NULL      |        |
+| NomSTG    | varchar(30) | YES  |     | NULL      |              |
+| Age       | int         | YES  |     | NULL      |                   |
+| Filiere   | varchar(50) | YES  |     | NULL      |                   |
+| Ville     | varchar(10) | YES  |     | casablanca |                   |
+| Date_insc | date        | YES  |     | curdate() | DEFAULT_GENERATED |
++-----------+-------------+------+-----+-----------+-------------------+
+6 rows in set (0.01 sec)
+
+mysql> select * from etudiant;
+Empty set (0.02 sec)
+
+mysql> alter table etudiant
+    -> drop column Age,
+    -> drop column Filiere,
+    -> drop column Ville,
+    -> drop column Date_insc;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc etudiant;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| id	  | int	 | NO   | PRI | NULL    |       |
+| Nom	 | varchar(30) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> create table groupe(
+    -> CodeGRP mediumint primary key,
+    -> NomGRP varchar(10),
+    -> Filiere varchar(30));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> desc groupe;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| CodeGRP | mediumint   | NO   | PRI | NULL    |       |
+| NomGRP  | varchar(10) | YES  |     | NULL    |       |
+| Filiere | varchar(30) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> insert into etudiant
+    -> values
+    -> ('AA123456', 'Hiba'),
+    -> ('BB123456', 'Aabla'),
+    -> ('CC123456', 'Nickie');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from etudiant;
++----------+--------+
+|id     | NomSTG |
++----------+--------+
+| 1 | aya   	    |
+| 3 | ali           |
+| 8 | nicolas       |
++----------+--------+
+3 rows in set (0.00 sec)
+
+mysql> insert into groupe
+    -> values
+    -> (1, 'Dev104', 'dev'),
+    -> (2, 'Dev102', 'dev'),
+    -> (3, 'ge101', 'gest'),
+    -> (4, 'info101', 'info');
+Query OK, 4 rows affected (0.02 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from groupe;
++---------+--------+--------------------------+
+| CodeGRP | NomGRP | Filiere                  |
++---------+--------+--------------------------+
+|       1 | Dev104 | dev                      |
+|       2 | Dev102 | dev   		      |
+|       3 | ges101 | ges		      |
+|       4 | info101| info		      |
++---------+--------+--------------------------+
+4 rows in set (0.00 sec)
+
+mysql> create table groupe_copy like groupe;
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> desc groupe_copy;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| CodeGRP | mediumint   | NO   | PRI | NULL    |       |
+| NomGRP  | varchar(10) | YES  |     | NULL    |       |
+| Filiere | varchar(30) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> insert into groupe_copy select * from groupe;
+Query OK, 4 rows affected (0.02 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from groupe_copy;
++---------+--------+--------------------------+
+| CodeGRP | NomGRP | Filiere                  |
++---------+--------+--------------------------+
+|       1 | Dev104 | Dev		      |
+|       2 | Dev102 | Dev	              |
+|       3 | ges101  |gest		      |
+|       4 | info101  | info		      |
++---------+--------+--------------------------+
+4 rows in set (0.00 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_isgi |
++----------------+
+| etudiant       |
+| groupe         |
+| groupe_copy    |
+| stagiaire      |
++----------------+
+4 rows in set (0.00 sec)
+
+mysql> alter table etudiant
+    -> add column CodeGRP mediumint;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table etudiant
+    -> add foreign key (CodeGRP) references groupe(CodeGRP);
+Query OK, 3 rows affected (0.12 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> desc etudiant;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+|id       | int         | NO   | PRI | NULL    |       |
+| Nom     | varchar(30) | YES  |     | NULL    |       |
+| CodeGRP | mediumint   | YES  | MUL | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+
+
+mysql> update etudiant
+    -> set CodeGRP = 1 where id = 3;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update etudiant
+    -> set CodeGRP = 3 where id = 4';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update etudiant
+    -> set CodeGRP = 4 where id = 2;
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> select * from etudiant;
++----------+--------+---------+
+| CIN      | NomSTG | CodeGRP |
++----------+--------+---------+
+| 3        | aya    |       1 |
+|4         | ali    |    NULL |
+| 2	   |nicolas |       3 |
++----------+--------+---------+
+3 rows in set (0.00 sec)
+
+mysql> update etudiant
+    -> set CodeGRP = 4 where CIN = 'BB123456';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from etudiant;
++----------+--------+---------+
+| id     | Nom      | CodeGRP |
++----------+--------+---------+
+|3         |aya     |       1 |
+|4         |ali     |       4 |
+| 2        | nicolas|       3 |
++----------+--------+---------+
+3 rows in set (0.00 sec)
+
+mysql> select * from etudiant join groupe where etudiant.CodeGRP = groupe.CodeGRP;
++----------+--------+---------+---------+--------+--------------------------+
+| id      | Nom | CodeGRP | CodeGRP | NomGRP | Filiere |
++----------+--------+---------+---------+--------+--------------------------+
+| 1      | aya   |       1 |       1 | Dev102 | Dev   |
+|2        | ali  |       4 |       4 |info102 | info |
+| 3      | nicolas|       3 |       3 | ge101  | gest |
++----------+--------+---------+---------+--------+--------------------------+
+3 rows in set (0.00 sec)
+mysql> alter table etudiant
+    -> rename column NomSTG to NomETU;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc etudiant;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| id     | int          | NO   | PRI | NULL    |       |
+| NomETU  | varchar(10) | YES  |     | NULL    |       |
+| CodeGRP | mediumint   | YES  | MUL | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select * from etudiant;
++----------+--------+---------+
+| id| NomETU | CodeGRP |
++----------+--------+---------+
+| 1    	    |aya    |       1 |
+| 2	     | ali  |       4 |
+|3        | nicolas |       3 |
++----------+--------+---------+
+3 rows in set (0.00 sec)
+
+mysql> select * from etudiant join groupe where etudiant.CodeGRP = groupe.CodeGRP;
++----------+--------+---------+---------+--------+--------------------------+
+| id      | NomETU | CodeGRP | CodeGRP | NomGRP | Filiere                  |
++----------+--------+---------+---------+--------+--------------------------+
+| 1 |aya  |       1 |       1 | Dev102 | dev    |
+| 4 | ali  |       4 |       4 | info101  | info |
+| 2 | nicolas |       3 |       3 | ges103  | gest   |
++----------+--------+---------+---------+--------+--------------------------+
+3 rows in set (0.00 sec)
+
+mysql> select CIN, NomETU, NomGRP, Filiere from etudiant join groupe where etudiant.CodeGRP = groupe.CodeGRP;
++----------+--------+--------+--------------------------+
+| CIN      | NomETU | NomGRP | Filiere                  |
++----------+--------+--------+--------------------------+
+| 1        |aya   | Dev102 | dev            		|
+|2    | ali  | info101  | info 				|
+|3 | nicolas | ge103  | gest			       |
++----------+--------+--------+--------------------------+
+3 rows in set (0.00 sec)
+
